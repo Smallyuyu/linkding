@@ -47,6 +47,7 @@ class BookmarkAssetViewTestCase(TestCase, BookmarkFactoryMixin):
         asset = self.setup_asset_with_file(bookmark)
 
         response = self.client.get(reverse(view_name, args=[asset.id]))
+        self.addCleanup(response.close)
         self.assertEqual(response.status_code, 200)
 
         # other user's bookmark
@@ -79,6 +80,7 @@ class BookmarkAssetViewTestCase(TestCase, BookmarkFactoryMixin):
         asset = self.setup_asset_with_file(bookmark)
 
         response = self.client.get(reverse(view_name, args=[asset.id]))
+        self.addCleanup(response.close)
         self.assertEqual(response.status_code, 200)
 
     def view_access_guest_user_test(self, view_name: str):
@@ -129,6 +131,7 @@ class BookmarkAssetViewTestCase(TestCase, BookmarkFactoryMixin):
         asset = self.setup_asset_with_file(bookmark)
 
         response = self.client.get(reverse(view_name, args=[asset.id]))
+        self.addCleanup(response.close)
         self.assertEqual(response.status_code, 200)
 
     def test_view_access(self):
@@ -147,6 +150,7 @@ class BookmarkAssetViewTestCase(TestCase, BookmarkFactoryMixin):
         bookmark = self.setup_bookmark()
         asset = self.setup_asset_with_file(bookmark)
         response = self.client.get(reverse("linkding:assets.view", args=[asset.id]))
+        self.addCleanup(response.close)
 
         self.assertEqual(response["Content-Type"], asset.content_type)
         self.assertEqual(
@@ -254,6 +258,7 @@ class BookmarkAssetViewTestCase(TestCase, BookmarkFactoryMixin):
         bookmark = self.setup_bookmark()
         asset = self.setup_asset_with_uploaded_file(bookmark)
         response = self.client.get(reverse("linkding:assets.view", args=[asset.id]))
+        self.addCleanup(response.close)
 
         self.assertEqual(response["Content-Type"], asset.content_type)
         self.assertEqual(
@@ -266,6 +271,7 @@ class BookmarkAssetViewTestCase(TestCase, BookmarkFactoryMixin):
         bookmark = self.setup_bookmark()
         asset = self.setup_asset_with_uploaded_file(bookmark, content_type="video/mp4")
         response = self.client.get(reverse("linkding:assets.view", args=[asset.id]))
+        self.addCleanup(response.close)
 
         self.assertEqual(response["Content-Type"], asset.content_type)
         self.assertEqual(
