@@ -244,3 +244,18 @@ class AutoTaggingTestCase(TestCase):
         tags = auto_tagging.get_tags(script, url)
 
         self.assertEqual(tags, {"section1"})
+
+    def test_auto_tag_combines_host_path_query_and_fragment_constraints(self):
+        script = """
+            example.com general
+            example.com/guide?lang=en#section selected
+        """
+        cases = {
+            "https://docs.example.com/guide/start?lang=en#section-1": {"general", "selected"},
+            "https://docs.example.com/intro?lang=en#section-1": {"general"},
+            "https://docs.example.com/guide/start?lang=fr#section-1": {"general"},
+            "https://docs.example.com/guide/start?lang=en#appendix": {"general"},
+        }
+        for url, expected in cases.items():
+            with self.subTest(url=url):
+                self.assertEqual(auto_tagging.get_tags(script, url), expected)
